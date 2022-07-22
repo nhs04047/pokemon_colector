@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js --exec babel-node",
-    "test": "jest --setupFiles dotenv/config"
+    "test": "jest --setupFiles dotenv/config",
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
+    "predev": "npm run api-docs"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "supertest": "^6.1.6",
     "swagger-cli": "^4.0.4",
     "uuid": "^8.3.2",
+    "yamljs": "^0.3.0",
     "yarn": "^1.22.17"
   },
   "devDependencies": {
