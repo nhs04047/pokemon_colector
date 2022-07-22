@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Pokemon-Collector API
   description: Pokemon-Collector API 명세서입니다
   license:
     name: MIT
 servers:
-  - url: 'http://localhost:3000/'
+  - url: 'http://localhost:5000/'
 components:
   securitySchemes:
     Authorization:

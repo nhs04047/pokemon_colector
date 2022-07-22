@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node",
+    "start": "npm run api-docs & nodemon index.js --exec babel-node",
     "test": "jest --setupFiles dotenv/config",
-    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
-    "predev": "npm run api-docs"
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml"
   },
   "repository": {
     "type": "git",
