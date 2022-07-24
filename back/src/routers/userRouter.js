@@ -14,8 +14,7 @@ userAuthRouter.post('/user/register',validator('registerScema'), async function 
       );
     }
 
-    const { nickname, email, password, sex, birth, interest, likeType } =
-      req.body;
+    const { nickname, email, password, sex, birth, interest, likeType } = req.body;
 
     const newUser = await userAuthService.addUser({
       nickname,
@@ -39,7 +38,7 @@ userAuthRouter.post('/user/register',validator('registerScema'), async function 
 
 userAuthRouter.post('/user/login', validator('loginScema'), async function (req, res, next) {
   try {
-    const { email, password}  = req.body;
+    const { email, password } = req.body;
     const user = await userAuthService.getUser({ email, password });
 
     if (user.errorMessage) {
@@ -130,15 +129,9 @@ userAuthRouter.put(
   loginRequired,
   async function (req, res, next) {
     try {
-      console.log(req.body)
       const userId = req.currentUserId;
       let currentUserInfo = await userAuthService.getUserInfo({ userId });
-      const nickname = req.body.nickname ?? null;
-      const likeType = req.body.likeType ?? null;
-      const profileImg = req.body.profileImg ?? null;
-      const interest = req.body.interest ?? null;
-
-      const toUpdate = { nickname, likeType, profileImg, interest };
+      const toUpdate = req.body;
 
       currentUserInfo = await userAuthService.setUser({
         userId,
@@ -165,7 +158,7 @@ userAuthRouter.post(
       }
 
       const userId = req.currentUserId;
-      const password = req.body.password;
+      const { password } = req.body;
 
       const user = await userAuthService.changePassword({ userId, password });
       res.status(200).json(user);

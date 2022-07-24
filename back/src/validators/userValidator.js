@@ -35,7 +35,7 @@ const loginScema = joi.object({
 
 const profileModifyScema = joi.object({
 	nickname: joi.string(),
-  interest: joi.number().integer().min(1).min(5),
+  interest: joi.number().integer().min(1).max(5),
   likeType: joi.string().valid(
     '노말',
 		'불꽃',
@@ -55,6 +55,7 @@ const profileModifyScema = joi.object({
 		'강철',
 		'페어리'
     ),
+	profileImg: joi.string()
 })
 
 const changePasswordScema = joi.object({
