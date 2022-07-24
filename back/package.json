@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node",
-    "test": "jest --setupFiles dotenv/config"
+    "start": "npm run api-docs & nodemon index.js --exec babel-node",
+    "test": "jest --setupFiles dotenv/config",
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml"
   },
   "repository": {
     "type": "git",
@@ -25,12 +26,14 @@
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "jest": "^27.3.1",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
     "mongoose": "^6.2.1",
     "supertest": "^6.1.6",
     "swagger-cli": "^4.0.4",
     "uuid": "^8.3.2",
+    "yamljs": "^0.3.0",
     "yarn": "^1.22.17"
   },
   "devDependencies": {

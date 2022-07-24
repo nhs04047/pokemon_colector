@@ -1,0 +1,1532 @@
+openapi: 3.0.0
+info:
+  version: 0.2.0
+  title: Pokemon-Collector API
+  description: Pokemon-Collector API 명세서입니다
+  license:
+    name: MIT
+servers:
+  - url: 'http://localhost:5000/'
+components:
+  securitySchemes:
+    Authorization:
+      in: header
+      name: Authorization
+      type: apiKey
+      scheme: bearer
+  security:
+    Authorization: []
+paths:
+  /user/register:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  example: 포켓몬 트레이너
+                email:
+                  type: string
+                  example: a@naver.com
+                password:
+                  type: string
+                  example: 1234
+                sex:
+                  type: string
+                  example: Male
+                birth:
+                  type: string
+                  example: 1990-12-03T00:00:00.000Z
+                interest:
+                  type: number
+                  example: 3
+                likeType:
+                  type: string
+                  example: 격투
+      tags:
+        - user
+      summary: 회원가입
+      description: User의 회원가입 API
+      responses:
+        '200':
+          description: 회원가입 성공
+        '400':
+          description: Content-Type application/json으로 설정
+  /user/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: a@naver.com
+                password:
+                  type: string
+                  example: 1234
+      tags:
+        - user
+      summary: 로그인
+      description: User의 로그인 API
+      responses:
+        '200':
+          description: 로그인 성공
+        '400':
+          description: 가입 내역이 없는 이메일이므로 로그인 실패
+  /user/current:
+    get:
+      tags:
+        - user
+      summary: 최근에 로그인한 유저 정보
+      security:
+        - Authorization: []
+      description: 최근에 로그인한 User의 정보를 불러오는 API
+      responses:
+        '200':
+          description: 최근에 로그인한 유저 정보 불러옴
+        '400':
+          description: 정상적인 토큰이 아니라서 유저 정보를 불러오는 것을 실패
+          content:
+            application/json:
+              schema:
+                type: object
+  /user/attendanceCheck:
+    put:
+      tags:
+        - user
+      summary: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인
+      description: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인 -> 포인트 지급 여부 업데이트 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: '출석체크 시간, 포인트 지급 여부 업데이트'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attendance:
+                    type: string
+                    example: 2022-05-02T16:03:30.429Z
+                  isPointGiven:
+                    type: string
+                    example: false
+  /user/checkIn:
+    put:
+      tags:
+        - user
+      summary: 기존 포인트 + 1000
+      description: '기존 포인트 + 1000, 포인트 지급 여부 업데이트 API'
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: '포인트, 포인트 지급 여부 업데이트'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attendance:
+                    type: string
+                    example: 2022-05-02T16:03:30.429Z
+                  isPointGiven:
+                    type: string
+                    example: false
+                  point:
+                    type: number
+                    example: 2000
+  /user/profileModify:
+    put:
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  example: 태초마을 관장
+                likeType:
+                  type: string
+                  example: 불꽃
+                profileImg:
+                  type: string
+                  example: 117.png
+                interest:
+                  type: number
+                  example: 5
+      summary: 유저의 프로필 변경
+      description: 유저의 프로필 변경 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 유저 프로필 변경 성공
+  /user/changePassword:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: 1234
+      tags:
+        - user
+      summary: 비밀번호 변경
+      description: User의 비밀번호 변경 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 비밀번호 변경 성공
+        '400':
+          description: 변경할 패스워드 입력
+  /achievementList:
+    get:
+      summary: 업적 리스트 조회
+      description: 업적 리스트 반환 API
+      tags:
+        - achievements
+      security:
+        - Authorization: []
+      parameters:
+        in: header
+        name: Authorization
+        required: true
+      responses:
+        '200':
+          description: 업적 리스트 반환
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    id:
+                      type: number
+                    type:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    condition:
+                      type: array
+                      items:
+                        type: number
+              example:
+                - _id: 626a3362d48b52f83c27058a
+                  id: 1
+                  type: visited
+                  name: 초심자 트레이너
+                  description: 따끈따끈한 트레이너
+                  condition:
+                    - 1
+                - _id: 626a3362d48b52f83c27058b
+                  id: 2
+                  type: collected
+                  name: 스타팅 포켓몬 콜렉터
+                  description: 스타팅 포켓몬을 모두 모았다!
+                  condition:
+                    - 1
+                    - 4
+                    - 7
+                - _id: 626a3362d48b52f83c27058c
+                  id: 3
+                  type: collected
+                  name: 노말 포켓몬 콜렉터
+                  description: 노말 속성 포켓몬을 모두 모았다!
+                  condition:
+                    - 16
+                    - 17
+                    - 18
+                    - 19
+                    - 20
+                    - 21
+                    - 22
+                    - 39
+                    - 40
+                    - 52
+                    - 53
+                    - 83
+                    - 84
+                    - 85
+                    - 108
+                    - 113
+                    - 115
+                    - 128
+                    - 132
+                    - 133
+                    - 137
+                    - 143
+  /userAchievementList:
+    get:
+      summary: 유저 업적 리스트 조회
+      description: 유저의 업적 리스트를 반환
+      tags:
+        - achievements
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 유저의 업적 리스트 반환 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    type:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: number
+              example:
+                - id: 1
+                  type: visited
+                  name: 초심자 트레이너
+                  description: 따끈따끈한 트레이너
+                  status: 100
+                - id: 2
+                  type: collected
+                  name: 스타팅 포켓몬 콜렉터
+                  description: 스타팅 포켓몬을 모두 모았다!
+                  status: 33
+                - id: 3
+                  type: collected
+                  name: 노말 포켓몬 콜렉터
+                  description: 노말 속성 포켓몬을 모두 모았다!
+                  status: 73
+                - id: 4
+                  type: collected
+                  name: 불꽃 포켓몬 콜렉터
+                  description: 불꽃 속성 포켓몬을 모두 모았다!
+                  status: 58
+                - id: 5
+                  type: collected
+                  name: 물 포켓몬 콜렉터
+                  description: 물 속성 포켓몬을 모두 모았다!
+                  status: 75
+        '400':
+          description: 요청이 잘못 됨
+  /addAchievements:
+    get:
+      summary: 새로운 업적을 생성
+      description: |
+        새로운 업적을 생성해 업적 db에 추가 및 유저 db업적 필드에  적용<br> ( ⭐**주의**⭐ 모든 업적 db와 모든 유저 db를 수정하게 되니   매우 신중하게 사용하고 테스트는 하지 말 것)
+      tags:
+        - achievements
+      security:
+        - Authorization: []
+      requestBody:
+        description: 업적의 정보를 입력
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+                description:
+                  type: string
+                condition:
+                  type: array
+                  items:
+                    type: number
+            example:
+              - id: 22
+                name: 이브이 컬렉터
+                discription: 이브이와 이브이의 3가지 진화형을 다   모았다!
+                condition:
+                  - 133
+                  - 134
+                  - 135
+                  - 136
+      responses:
+        '200':
+          description: '업적 db에 새로운 업적 추가, 유저 업적 목록에 새로운 업적의 id와 달성도 추가 완료'
+  '/pokemonMeanData/{group}':
+    get:
+      tags:
+        - pokemonMeanData
+      security:
+        - Authorization: []
+      summary: 속성 별 또는 전체 평균 데이터
+      description: 속성 별 또는 전체 평균 데이터를 가져오는 API
+      parameters:
+        - in: path
+          name: group
+          required: true
+          type: string
+          schema:
+            type: string
+            enum:
+              - all
+              - grass
+              - fire
+              - water
+              - bug
+              - normal
+              - poison
+              - electric
+              - ground
+              - fairy
+              - fight
+              - psychic
+              - rock
+              - ghost
+              - ice
+              - dragon
+              - flying
+              - steel
+          style: matrix
+      responses:
+        '200':
+          description: 속성 별 또는 전체 평균 데이터 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  group:
+                    type: string
+                  height:
+                    type: number
+                  weight:
+                    type: number
+                  totalPoints:
+                    type: number
+                  hp:
+                    type: number
+                  attack:
+                    type: number
+                  defense:
+                    type: number
+                  spAttack:
+                    type: number
+                  spDefense:
+                    type: number
+                  speed:
+                    type: number
+              example:
+                _id: 627132ce0455dcafe79e64d5
+                group: all
+                height: 1.1947019867549677
+                weight: 45.95165562913907
+                totalPoints: 407.6423841059603
+                hp: 64.21192052980132
+                attack: 72.91390728476821
+                defense: 68.2251655629139
+                spAttack: 67.13907284768212
+                spDefense: 66.08609271523179
+                speed: 69.06622516556291
+  /pokemonMeanData:
+    get:
+      tags:
+        - pokemonMeanData
+      security:
+        - Authorization: []
+      summary: '속성 별, 전체 평균 데이터'
+      description: '속성 별, 전체 평균 데이터를 모두 가져오는 API'
+      responses:
+        '200':
+          description: '속성 별, 전체 평균 데이터 정보를 불러옴'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    group:
+                      type: string
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    totalPoints:
+                      type: number
+                    hp:
+                      type: number
+                    attack:
+                      type: number
+                    defense:
+                      type: number
+                    spAttack:
+                      type: number
+                    spDefense:
+                      type: number
+                    speed:
+                      type: number
+              example:
+                - _id: 627132ce0455dcafe79e64d5
+                  group: all
+                  height: 1.1947019867549677
+                  weight: 45.95165562913907
+                  totalPoints: 407.6423841059603
+                  hp: 64.21192052980132
+                  attack: 72.91390728476821
+                  defense: 68.2251655629139
+                  spAttack: 67.13907284768212
+                  spDefense: 66.08609271523179
+                  speed: 69.06622516556291
+                - _id: 627132ce0455dcafe79e64d6
+                  group: grass
+                  height: 1.0214285714285716
+                  weight: 26.485714285714284
+                  totalPoints: 400.92857142857144
+                  hp: 62.5
+                  attack: 72.35714285714286
+                  defense: 69.28571428571429
+                  spAttack: 82.85714285714286
+                  spDefense: 65.35714285714286
+                  speed: 48.57142857142857
+                - _id: 627132ce0455dcafe79e64d7
+                  group: fire
+                  height: 1.2166666666666666
+                  weight: 48.025
+                  totalPoints: 455.5833333333333
+                  hp: 63.833333333333336
+                  attack: 83.91666666666667
+                  defense: 62.583333333333336
+                  spAttack: 84.58333333333333
+                  spDefense: 76.66666666666667
+                  speed: 84
+  '/pokemonData/{id}':
+    get:
+      tags:
+        - pokemonRadarChartData
+      security:
+        - Authorization: []
+      summary: 포켓몬 별 radar chart 데이터
+      description: MinMaxScaling한 포켓몬 별 radar chart 데이터를 가져오는 API
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+          schema:
+            type: number
+            maximum: 151
+            examples:
+              zero:
+                value: 0
+              max:
+                value: 151
+          style: matrix
+      responses:
+        '200':
+          description: 포켓몬 별 radar chart 데이터 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  typeOne:
+                    type: string
+                  height:
+                    type: number
+                  weight:
+                    type: number
+                  totalPoints:
+                    type: number
+                  hp:
+                    type: number
+                  attack:
+                    type: number
+                  defense:
+                    type: number
+                  spAttack:
+                    type: number
+                  spDefense:
+                    type: number
+                  speed:
+                    type: number
+              example:
+                _id: 626c9edeada3c0a90aa13508
+                id: 1
+                name: 이상해씨
+                typeOne: 풀
+                height: 5.813953488372092
+                weight: 1.4785823005001089
+                totalPoints: 25.360824742268036
+                hp: 14.583333333333332
+                attack: 34.10852713178295
+                defense: 25.142857142857142
+                spAttack: 35.97122302158273
+                spDefense: 42.85714285714285
+                speed: 22.222222222222218
+  '/pokemon/{id}':
+    get:
+      summary: 포켓몬 모든 정보 반환
+      description: |
+        포켓몬의 id를 params로 받아 해당 포켓몬의 정보를 반환
+      tags:
+        - pokemon
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+          schema:
+            type: number
+            maximum: 151
+            examples:
+              zero:
+                value: 0
+              max:
+                value: 151
+          style: matrix
+      responses:
+        '200':
+          description: 포켓몬 정보 요청 정상 처리
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  status:
+                    type: string
+                  typeOne:
+                    type: string
+                  typeTwo:
+                    type: string
+                  height:
+                    type: number
+                  weight:
+                    type: number
+                  totalPoints:
+                    type: number
+                  hp:
+                    type: number
+                  attack:
+                    type: number
+                  defense:
+                    type: number
+                  spAttack:
+                    type: number
+                  spDefense:
+                    type: number
+                  speed:
+                    type: number
+              example:
+                _id: '626407bd961c4243634ea1e8,'
+                id: 2
+                name: 이상해풀
+                status: 노말
+                typeOne: 풀
+                typeTwo: 독
+                height: 1
+                weight: 13
+                totalPoints: 405
+                hp: 60
+                attack: 62
+                defense: 63
+                spAttack: 80
+                spDefense: 80
+                speed: 60
+        '400':
+          description: 요청이 잘못 됨
+  '/pokemon/{id}/name':
+    get:
+      summary: '포켓몬 id, 이름 반환'
+      description: |
+        포켓몬의 id를 params로 받아 해당 포켓몬의 id와 이름(name)을 반환
+      tags:
+        - pokemon
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+            maximum: 151
+            examples:
+              zero:
+                value: 0
+              max:
+                value: 151
+          style: matrix
+      responses:
+        '200':
+          description: '포켓몬 id, name 요청 정상 처리'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+              example:
+                id: 2
+                name: 이상해풀
+        '400':
+          description: 요청이 잘못 됨
+  /pokemonList:
+    get:
+      summary: 모든 포켓몬의 정보를 리스트로 반환
+      description: |
+        각각 포켓몬의 모든 정보를 담은 object들을 array에 담아 모든 포켓만을 반환
+      tags:
+        - pokemon
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 포켓몬들 정보 요청 정상 처리
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    status:
+                      type: string
+                    typeOne:
+                      type: string
+                    typeTwo:
+                      type: string
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    totalPoints:
+                      type: number
+                    hp:
+                      type: number
+                    attack:
+                      type: number
+                    defense:
+                      type: number
+                    spAttack:
+                      type: number
+                    spDefense:
+                      type: number
+                    speed:
+                      type: number
+                example:
+                  - _id: 626407bd961c4243634ea1e7
+                    id: 1
+                    name: 이상해씨
+                    status: 노말
+                    typeOne: 풀
+                    typeTwo: 독
+                    height: 0.7
+                    weight: 6.9
+                    totalPoints: 318
+                    hp: 45
+                    attack: 49
+                    defense: 49
+                    spAttack: 65
+                    spDefense: 65
+                    speed: 45
+                  - _id: '626407bd961c4243634ea1e8,'
+                    id: 2
+                    name: 이상해풀
+                    status: 노말
+                    typeOne: 풀
+                    typeTwo: 독
+                    height: 1
+                    weight: 13
+                    totalPoints: 405
+                    hp: 60
+                    attack: 62
+                    defense: 63
+                    spAttack: 80
+                    spDefense: 80
+                    speed: 60
+                  - _id: 626407bd961c4243634ea1e9
+                    id: 3
+                    name: 이상해꽃
+                    status: 노말
+                    typeOne: 풀
+                    typeTwo: 독
+                    height: 2
+                    weight: 100
+                    totalPoints: 525
+                    hp: 80
+                    attack: 82
+                    defense: 83
+                    spAttack: 100
+                    spDefense: 100
+                    speed: 80
+                  - _id: '626407bd961c4243634ea1ea,'
+                    id: 4
+                    name: 파이리
+                    status: 노말
+                    typeOne: 불꽃
+                    typeTwo: 없음
+                    height: 0.6
+                    weight: 8.5
+                    totalPoints: 309
+                    hp: 39
+                    attack: 52
+                    defense: 43
+                    spAttack: 60
+                    spDefense: 50
+                    speed: 65
+        '400':
+          description: 요청이 잘못
+  '/pokemonList/{type}':
+    get:
+      summary: 특정 속성 포켓몬의 정보를 리스트로 반환
+      description: |
+        각각 포켓몬의 모든 정보를 담은 object들을 array에 담아 특정 속성의 포켓만을 반환.<br> typeOne, typeTwo 둘 중 하나라도 params type과 일치하면 반환
+      tags:
+        - pokemon
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+            enum:
+              - 풀
+              - 불꽃
+              - 물
+              - 벌레
+              - 노말
+              - 독
+              - 전기
+              - 땅
+              - 페어리
+              - 격투
+              - 에스퍼
+              - 바위
+              - 고스트
+              - 얼음
+              - 드래곤
+              - 비행
+              - 강철
+          style: matrix
+      responses:
+        '200':
+          description: 포켓몬들 정보 요청 정상 처리
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    status:
+                      type: string
+                    typeOne:
+                      type: string
+                    typeTwo:
+                      type: string
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    totalPoints:
+                      type: number
+                    hp:
+                      type: number
+                    attack:
+                      type: number
+                    defense:
+                      type: number
+                    spAttack:
+                      type: number
+                    spDefense:
+                      type: number
+                    speed:
+                      type: number
+                example:
+                  - typeTwo: 없음
+                    _id: 626407bd961c4243634ea1ff
+                    id: 25
+                    name: 피카츄
+                    status: 노말
+                    typeOne: 전기
+                    height: 0.4
+                    weight: 6
+                    totalPoints: 320
+                    hp: 35
+                    attack: 55
+                    defense: 40
+                    spAttack: 50
+                    spDefense: 50
+                    speed: 90
+                  - typeTwo: 없음
+                    _id: 626407bd961c4243634ea24b
+                    id: 101
+                    name: 붐볼
+                    status: 노말
+                    typeOne: 전기
+                    height: 1.2
+                    weight: 66.6
+                    totalPoints: 490
+                    hp: 60
+                    attack: 50
+                    defense: 70
+                    spAttack: 80
+                    spDefense: 80
+                    speed: 150
+                  - _id: 626407bd961c4243634ea238
+                    id: 82
+                    name: 레어코일
+                    status: 노말
+                    typeOne: 전기
+                    typeTwo: 강철
+                    height: 1
+                    weight: 60
+                    totalPoints: 465
+                    hp: 50
+                    attack: 60
+                    defense: 95
+                    spAttack: 120
+                    spDefense: 70
+                    speed: 70
+        '400':
+          description: 요청이 잘못
+  /drawPokemon:
+    get:
+      summary: 포켓몬 스티커 뽑기
+      description: 포켓몬 스티커를 등급에 따라 확률적으로 뽑아주고 업적 및 랭크를 갱신
+      tags:
+        - pokemon
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: |
+            포켓몬 스티커 뽑기 및 업적•랭크 포인트 갱신 완료.<br> 뽑힌 포켓몬의 정보와 유저 잔여 포인트, 랭킹 포인트를 함께 반환.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  pokemonStatus:
+                    type: string
+                  pokemonTotalPoint:
+                    type: number
+                  status:
+                    type: boolean
+                    description: 성공 여부
+                  userPoint:
+                    type: number
+                  PankingPoint:
+                    type: number
+              example:
+                id: 132
+                name: 메타몽
+                pokemonStatus: 노말
+                pokemonTotalPoint: 288
+                status: true
+                userPoint: 4500
+                RankingPoint: 656.5
+        '400':
+          description: 요청이 잘못
+  /pokemonScaledMeanData:
+    get:
+      tags:
+        - pokemonScaledMeanData
+      security:
+        - Authorization: []
+      summary: scaling 된 속성 별 평균 데이터
+      description: MinMaxScaling한 속성 별 평균 데이터를 모두 가져오는 API
+      responses:
+        '200':
+          description: 속성 별 평균 데이터 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    group:
+                      type: string
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    totalPoints:
+                      type: number
+                    hp:
+                      type: number
+                    attack:
+                      type: number
+                    defense:
+                      type: number
+                    spAttack:
+                      type: number
+                    spDefense:
+                      type: number
+                    speed:
+                      type: number
+              example:
+                - _id: 627136710455dcafe79e64e9
+                  group: grass
+                  height: 18.417945690672973
+                  weight: 12.901845158835831
+                  totalPoints: 36.38738195700222
+                  hp: 45.87155963302753
+                  attack: 45.71428571428572
+                  defense: 37.62575452716298
+                  spAttack: 53.846153846153854
+                  spDefense: 33.78604963112005
+                  speed: 0
+                - _id: 627136710455dcafe79e64ea
+                  group: fire
+                  height: 28.099173553719005
+                  weight: 34.41245006657789
+                  totalPoints: 67.13548992030005
+                  hp: 48.31804281345566
+                  attack: 66.97318007662835
+                  defense: 27.241784037558688
+                  spAttack: 56.32478632478632
+                  spDefense: 62.98904538341159
+                  speed: 68.8888888888889
+                - _id: 627136710455dcafe79e64eb
+                  group: water
+                  height: 29.132231404958674
+                  weight: 40.05492676431424
+                  totalPoints: 43.1434599156118
+                  hp: 45.98623853211009
+                  attack: 42.643678160919535
+                  defense: 55.67781690140845
+                  spAttack: 30.897435897435898
+                  spDefense: 34.397007042253506
+                  speed: 34.4357638888889
+  /pokemonScaledMeanData/total:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - pokemonScaledMeanData
+      summary: scaling 된 속성 별 평균 총 능력치 데이터
+      description: MinMaxScaling한 속성 별 평균 데이터 중 속성 이름과 총 능력치만 가져오는 API
+      responses:
+        '200':
+          description: 속성 별 평균 데이터의 속성 이름과 총 능력치 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    totalPoints:
+                      type: number
+              example:
+                - type: grass
+                  totalPoints: 36.38738195700222
+                - type: fire
+                  totalPoints: 67.13548992030005
+                - type: water
+                  totalPoints: 43.1434599156118
+                - type: bug
+                  totalPoints: 0
+                - type: normal
+                  totalPoints: 25.738396624472585
+                - type: poison
+                  totalPoints: 26.096407109065325
+                - type: electric
+                  totalPoints: 61.493983434911684
+                - type: ground
+                  totalPoints: 35.66405465139644
+                - type: fairy
+                  totalPoints: 32.60196905766526
+                - type: fight
+                  totalPoints: 49.57805907172997
+                - type: psychic
+                  totalPoints: 67.85211975085392
+                - type: rock
+                  totalPoints: 46.861015215445605
+                - type: ghost
+                  totalPoints: 38.67791842475387
+                - type: ice
+                  totalPoints: 99.99999999999997
+                - type: dragon
+                  totalPoints: 58.368495077355846
+                - type: flying
+                  totalPoints: 61.44792360648455
+                - type: steel
+                  totalPoints: 33.05203938115329
+  '/pokemonTypeData/{type}':
+    get:
+      tags:
+        - pokemonTypeData
+      summary: scaling 된 속성 별 모든 포켓몬 데이터
+      description: MinMaxScaling한 속성 별 모든 포켓몬 데이터를 모두 가져오는 API
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: type
+          required: true
+          type: string
+          schema:
+            type: string
+            enum:
+              - grass
+              - fire
+              - water
+              - bug
+              - normal
+              - poison
+              - electric
+              - ground
+              - fairy
+              - fight
+              - psychic
+              - rock
+              - ghost
+              - ice
+              - dragon
+              - flying
+              - steel
+      responses:
+        '200':
+          description: 속성 별 모든 포켓몬 데이터 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    typeOne:
+                      type: string
+                    typeTwo:
+                      type: string
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    totalPoints:
+                      type: number
+                    hp:
+                      type: number
+                    attack:
+                      type: number
+                    defense:
+                      type: number
+                    spAttack:
+                      type: number
+                    spDefense:
+                      type: number
+                    speed:
+                      type: number
+              example:
+                - _id: 627104bb0455dcafe79e648f
+                  id: 81
+                  name: 코일
+                  typeOne: 전기
+                  typeTwo: 강철
+                  height: 0
+                  weight: 0
+                  totalPoints: 0
+                  hp: 0
+                  attack: 0
+                  defense: 0
+                  spAttack: 0
+                  spDefense: 0
+                  speed: 0
+                - _id: 627104bb0455dcafe79e6490
+                  id: 82
+                  name: 레어코일
+                  typeOne: 전기
+                  typeTwo: 강철
+                  height: 100
+                  weight: 100
+                  totalPoints: 100.00000000000003
+                  hp: 100
+                  attack: 100
+                  defense: 100
+                  spAttack: 100
+                  spDefense: 100
+                  speed: 100
+  '/pokemonTypeData/{type}/total':
+    get:
+      tags:
+        - pokemonTypeData
+      summary: scaling 된 속성 별 모든 포켓몬의 총 능력치 데이터
+      description: MinMaxScaling한 속성 별 모든 포켓몬의 총 능력치 데이터를 모두 가져오는 API
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: type
+          required: true
+          type: string
+          schema:
+            type: string
+            enum:
+              - grass
+              - fire
+              - water
+              - bug
+              - normal
+              - poison
+              - electric
+              - ground
+              - fairy
+              - fight
+              - psychic
+              - rock
+              - ghost
+              - ice
+              - dragon
+              - flying
+              - steel
+      responses:
+        '200':
+          description: 속성 별 평균 데이터의 속성 이름과 총 능력치 정보를 불러옴
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    totalPoints:
+                      type: number
+              example:
+                - name: 코일
+                  totalPoints: 0
+                - type: 레어코일
+                  totalPoints: 100.00000000000003
+  /quiz:
+    get:
+      summary: 퀴즈 출제
+      description: 퀴즈 문제 반환과 유저의 퀴즈 기회 삭감 및 남은 기회 반환
+      tags:
+        - quiz
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 퀴즈 문제와 유저의 남은 퀴즈 기회를 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quiz:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                  reminingChance:
+                    type: number
+              example:
+                quiz:
+                  id: 106
+                  name: 시라소몬
+                reminingChance: 2
+        '400':
+          description: 요청이 잘못
+  '/succeedQuiz/{opportunity}':
+    get:
+      summary: 퀴즈 정답 시 포인트 주기
+      description: |
+        실루엣 문제에서 정답 시 1000포인트.(opportunity = 'first')<br> 모습이 보이는 문제 정답시 500포인트 지급.(opportunity = 'second')
+      tags:
+        - quiz
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: opportunity
+          required: true
+          schema:
+            type: string
+            enum:
+              - first
+              - second
+            example: first
+          style: matrix
+      responses:
+        '200':
+          description: |
+            params opportunity 값에 따른 포인트를 충전 후 적용 된 유저 포인트 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updatedPoint:
+                    type: number
+                    decription: 충전이 적용 된 유저 포인트
+              example:
+                updatedPoint: 4500
+        '400':
+          description: 요청이 잘못 됨
+  '/ranking/{field}/{count}':
+    get:
+      summary: 랭크 포인트 or 포켓몬 수 랭킹 반환
+      description: |
+        유저의 랭크 포인트를 비교해 오름차순으로 정렬 후 반환. (field = 'rankPoint')<br> 유저의 포켓몬 수를 비교해 내림차순으로 정렬 후 반환. (field = 'second')<br> params count는 반환 할 유저의 수를 기입
+      tags:
+        - ranking
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: field
+          required: true
+          schema:
+            type: string
+            enum:
+              - rankPoint
+              - stickers
+            example: rankPoint
+          style: matrix
+        - in: path
+          name: count
+          required: true
+          schema:
+            type: number
+            example: 10
+          style: matrix
+      responses:
+        '400':
+          description: 요청이 잘못 됨
+        200-1:
+          description: field의 params로 `rankPoint`가 들어왔을 떄
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      format: object-id
+                    id:
+                      type: string
+                    email:
+                      type: string
+                    nickname:
+                      type: string
+                    likeType:
+                      type: string
+                    profileImg:
+                      type: string
+                      format: file-name
+                    stickers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          count:
+                            type: number
+                          _id:
+                            type: string
+                            format: object-id
+                    rankPoint:
+                      type: number
+              example:
+                - _id: 62724fcb4e0d742f46a93fa7
+                  id: e9d2a45e-a047-4281-9838-08881d29ccba
+                  email: elice@elice.io
+                  nickname: 으넹
+                  likeType: 물
+                  profileImg: 25.png
+                  stickers:
+                    - Objects
+                  rankPoint: 226664
+                - _id: 627327055c52350457783d04
+                  id: 1d903282-5269-407b-a900-dc2b856d7a80
+                  email: bohyeon@naver.com
+                  nickname: 보현
+                  likeType: 독
+                  profileImg: pokeball.png
+                  rankPoint: 65632.5
+                  stickers:
+                    - Objects
+                - _id: 62710da6aaf08b159ec1f1bc
+                  id: 4cbfb9e1-c315-44e9-af2f-49a034387435
+                  email: z@z.com
+                  nickname: admin
+                  likeType: 격투
+                  profileImg: 146.png
+                  stickers:
+                    - Objects
+                  rankPoint: 43682.5
+                - _id: 62733739f13724c39b265e31
+                  id: a1f0333e-d7aa-4803-83f7-69e8241780d4
+                  email: 111@111.com
+                  nickname: 찌리리공
+                  likeType: 전기
+                  profileImg: 100.png
+                  rankPoint: 7816.5
+                  stickers:
+                    - Objects
+        200-2:
+          description: field의 params로 `stickers`가 들어왔을 떄
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      format: object-id
+                    id:
+                      type: string
+                    email:
+                      type: string
+                    nickname:
+                      type: string
+                    likeType:
+                      type: string
+                    profileImg:
+                      type: string
+                      format: file-name
+                    stickers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          count:
+                            type: number
+                          _id:
+                            type: string
+                            format: object-id
+                    stickersCount:
+                      type: number
+              example:
+                - _id: 62724fcb4e0d742f46a93fa7
+                  id: e9d2a45e-a047-4281-9838-08881d29ccba
+                  email: elice@elice.io
+                  nickname: 으넹
+                  likeType: 물
+                  profileImg: 25.png
+                  stickers:
+                    - objects
+                  stickersCount: 142
+                - _id: 627327055c52350457783d04
+                  id: 1d903282-5269-407b-a900-dc2b856d7a80
+                  email: bohyeon@naver.com
+                  nickname: 보현
+                  likeType: 독
+                  profileImg: pokeball.png
+                  stickers:
+                    - objects
+                  stickersCount: 104
+                - _id: 62710da6aaf08b159ec1f1bc
+                  id: 4cbfb9e1-c315-44e9-af2f-49a034387435
+                  email: z@z.com
+                  nickname: admin
+                  likeType: 격투
+                  profileImg: 146.png
+                  stickers:
+                    - objects
+                  stickersCount: 78
+                - _id: 62733739f13724c39b265e31
+                  id: a1f0333e-d7aa-4803-83f7-69e8241780d4
+                  email: 111@111.com
+                  nickname: 찌리리공
+                  likeType: 전기
+                  profileImg: 100.png
+                  stickers:
+                    - objects
+                  stickersCount: 18
+                - _id: 62732c6da2125e4fb43fead9
+                  id: 0294ef5c-c7fa-4dc9-8c11-590e16502183
+                  email: abc@test.com
+                  nickname: abc
+                  likeType: 얼음
+                  profileImg: 148.png
+                  stickers:
+                    - objects
+                  stickersCount: 4

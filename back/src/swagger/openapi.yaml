@@ -1,0 +1,69 @@
+openapi: '3.0.0'
+info:
+  version: 0.2.0
+  title: Pokemon-Collector API
+  description: Pokemon-Collector API 명세서입니다
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:5000/
+components:
+  securitySchemes:
+    Authorization:
+      in: header
+      name: Authorization
+      type: apiKey
+      scheme: bearer
+  security:
+    Authorization: []
+paths:
+  /user/register:
+    $ref: './userRouter.yaml#/~1user~1register'
+  /user/login:
+    $ref: './userRouter.yaml#/~1user~1login'
+  /user/current:
+    $ref: './userRouter.yaml#/~1user~1current'
+  /user/attendanceCheck:
+    $ref: './userRouter.yaml#/~1user~1attendanceCheck'
+  /user/checkIn:
+    $ref: './userRouter.yaml#/~1user~1checkIn'
+  /user/profileModify:
+    $ref: './userRouter.yaml#/~1user~1profileModify'
+  /user/changePassword:
+    $ref: './userRouter.yaml#/~1user~1changePassword'
+  /achievementList:
+    $ref: './achievementsRouter.yaml#/~1achievementList'
+  /userAchievementList:
+    $ref: './achievementsRouter.yaml#/~1userAchievementList'
+  /addAchievements:
+    $ref: './achievementsRouter.yaml#/~1addAchievements'
+  /pokemonMeanData/{group}:
+    $ref: './pokemonMeanDataRouter.yaml#/~1pokemonMeanData~1{group}'
+  /pokemonMeanData:
+    $ref: './pokemonMeanDataRouter.yaml#/~1pokemonMeanData'
+  /pokemonData/{id}:
+    $ref: './pokemonRadarChartDataRouter.yaml#/~1pokemonData~1{id}'
+  /pokemon/{id}:
+    $ref: './pokemonRouter.yaml#/~1pokemon~1{id}'
+  /pokemon/{id}/name:
+    $ref: './pokemonRouter.yaml#/~1pokemon~1{id}~1name'
+  /pokemonList:
+    $ref: './pokemonRouter.yaml#/~1pokemonList'
+  /pokemonList/{type}:
+    $ref: './pokemonRouter.yaml#/~1pokemonList~1{type}'
+  /drawPokemon:
+    $ref: './pokemonRouter.yaml#/~1drawPokemon'
+  /pokemonScaledMeanData:
+    $ref: './pokemonScaledMeanDataRouter.yaml#/~1pokemonScaledMeanData'
+  /pokemonScaledMeanData/total:
+    $ref: './pokemonScaledMeanDataRouter.yaml#/~1pokemonScaledMeanData~1total'
+  /pokemonTypeData/{type}:
+    $ref: './pokemonTypeDataRouter.yaml#/~1pokemonTypeData~1{type}'
+  /pokemonTypeData/{type}/total:
+    $ref: './pokemonTypeDataRouter.yaml#/~1pokemonTypeData~1{type}~1total'
+  /quiz:
+    $ref: './quizRouter.yaml#/~1quiz'
+  /succeedQuiz/{opportunity}:
+    $ref: './quizRouter.yaml#/~1succeedQuiz~1{opportunity}'
+  /ranking/{field}/{count}:
+    $ref: './rankRouter.yaml#/~1ranking~1{field}~1{count}'

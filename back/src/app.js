@@ -29,14 +29,14 @@ import {
 import { pokemonMeanDataAuthRouter } from './routers/pokemonMeanDataRouter';
 import { pokemonScaledMeanDataAuthRouter } from './routers/pokemonScaledMeanDataRouter';
 
-const { swaggerUi, specs } = require('./modules/swagger');
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
+
 const app = express();
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true })
-);
+const swaggerSpec = YAML.load(path.join(__dirname, './swagger.yaml'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // CORS 에러 방지
 app.use(cors());
 
