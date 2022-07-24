@@ -1,3 +1,3 @@
-import {registerScema, loginScema, userIdScema, profileModifyScema, changePasswordScema} from './userValidator'
+import {registerScema, loginScema, profileModifyScema, changePasswordScema} from './userValidator'
 
-export{registerScema, loginScema, userIdScema, profileModifyScema, changePasswordScema}
+export{registerScema, loginScema, profileModifyScema, changePasswordScema}

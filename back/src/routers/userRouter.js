@@ -39,8 +39,7 @@ userAuthRouter.post('/user/register',validator('registerScema'), async function 
 
 userAuthRouter.post('/user/login', validator('loginScema'), async function (req, res, next) {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password}  = req.body;
     const user = await userAuthService.getUser({ email, password });
 
     if (user.errorMessage) {
@@ -77,7 +76,6 @@ userAuthRouter.get(
 
 userAuthRouter.put(
   '/user/attendanceCheck',
-  validator('userIdScema'),
   loginRequired,
   async function (req, res, next) {
     try {
@@ -105,7 +103,6 @@ userAuthRouter.put(
 
 userAuthRouter.put(
   '/user/checkIn',
-  validator('userIdScema'),
   loginRequired,
   async function (req, res, next) {
     try {

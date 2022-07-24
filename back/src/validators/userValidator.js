@@ -33,12 +33,7 @@ const loginScema = joi.object({
   password: joi.string().min(4).required(),
 })
 
-const userIdScema = joi.object({
-	currentUserId: joi.string().required(),
-})
-
 const profileModifyScema = joi.object({
-	currentUserId: joi.string().required(),
 	nickname: joi.string(),
   interest: joi.number().integer().min(1).min(5),
   likeType: joi.string().valid(
@@ -69,4 +64,4 @@ const changePasswordScema = joi.object({
 
 
 
-export {registerScema, loginScema, userIdScema, profileModifyScema, changePasswordScema}
+export {registerScema, loginScema, profileModifyScema, changePasswordScema}
