@@ -17,6 +17,186 @@ components:
   security:
     Authorization: []
 paths:
+  /user/register:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  example: 포켓몬 트레이너
+                email:
+                  type: string
+                  example: a@naver.com
+                password:
+                  type: string
+                  example: 1234
+                sex:
+                  type: string
+                  example: Male
+                birth:
+                  type: string
+                  example: 1990-12-03T00:00:00.000Z
+                interest:
+                  type: number
+                  example: 3
+                likeType:
+                  type: string
+                  example: 격투
+      tags:
+        - user
+      summary: 회원가입
+      description: User의 회원가입 API
+      responses:
+        '200':
+          description: 회원가입 성공
+        '400':
+          description: Content-Type application/json으로 설정
+  /user/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: a@naver.com
+                password:
+                  type: string
+                  example: 1234
+      tags:
+        - user
+      summary: 로그인
+      description: User의 로그인 API
+      responses:
+        '200':
+          description: 로그인 성공
+        '400':
+          description: 가입 내역이 없는 이메일이므로 로그인 실패
+  /user/current:
+    get:
+      tags:
+        - user
+      summary: 최근에 로그인한 유저 정보
+      security:
+        - Authorization: []
+      description: 최근에 로그인한 User의 정보를 불러오는 API
+      responses:
+        '200':
+          description: 최근에 로그인한 유저 정보 불러옴
+        '400':
+          description: 정상적인 토큰이 아니라서 유저 정보를 불러오는 것을 실패
+          content:
+            application/json:
+              schema:
+                type: object
+  /user/attendanceCheck:
+    put:
+      tags:
+        - user
+      summary: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인
+      description: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인 -> 포인트 지급 여부 업데이트 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: '출석체크 시간, 포인트 지급 여부 업데이트'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attendance:
+                    type: string
+                    example: 2022-05-02T16:03:30.429Z
+                  isPointGiven:
+                    type: string
+                    example: false
+  /user/checkIn:
+    put:
+      tags:
+        - user
+      summary: 기존 포인트 + 1000
+      description: '기존 포인트 + 1000, 포인트 지급 여부 업데이트 API'
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: '포인트, 포인트 지급 여부 업데이트'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attendance:
+                    type: string
+                    example: 2022-05-02T16:03:30.429Z
+                  isPointGiven:
+                    type: string
+                    example: false
+                  point:
+                    type: number
+                    example: 2000
+  /user/profileModify:
+    put:
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  example: 태초마을 관장
+                likeType:
+                  type: string
+                  example: 불꽃
+                profileImg:
+                  type: string
+                  example: 117.png
+                interest:
+                  type: number
+                  example: 5
+      summary: 유저의 프로필 변경
+      description: 유저의 프로필 변경 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 유저 프로필 변경 성공
+  /user/changePassword:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: 1234
+      tags:
+        - user
+      summary: 비밀번호 변경
+      description: User의 비밀번호 변경 API
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: 비밀번호 변경 성공
+        '400':
+          description: 변경할 패스워드 입력
   /achievementList:
     get:
       summary: 업적 리스트 조회
@@ -1350,183 +1530,3 @@ paths:
                   stickers:
                     - objects
                   stickersCount: 4
-  /user/register:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nickname:
-                  type: string
-                  example: 포켓몬 트레이너
-                email:
-                  type: string
-                  example: a@naver.com
-                password:
-                  type: string
-                  example: 1234
-                sex:
-                  type: string
-                  example: Male
-                birth:
-                  type: string
-                  example: 1990-12-03T00:00:00.000Z
-                interest:
-                  type: number
-                  example: 3
-                likeType:
-                  type: string
-                  example: 격투
-      tags:
-        - user
-      summary: 회원가입
-      description: User의 회원가입 API
-      responses:
-        '200':
-          description: 회원가입 성공
-        '400':
-          description: Content-Type application/json으로 설정
-  /user/login:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: a@naver.com
-                password:
-                  type: string
-                  example: 1234
-      tags:
-        - user
-      summary: 로그인
-      description: User의 로그인 API
-      responses:
-        '200':
-          description: 로그인 성공
-        '400':
-          description: 가입 내역이 없는 이메일이므로 로그인 실패
-  /user/current:
-    get:
-      tags:
-        - user
-      summary: 최근에 로그인한 유저 정보
-      security:
-        - Authorization: []
-      description: 최근에 로그인한 User의 정보를 불러오는 API
-      responses:
-        '200':
-          description: 최근에 로그인한 유저 정보 불러옴
-        '400':
-          description: 정상적인 토큰이 아니라서 유저 정보를 불러오는 것을 실패
-          content:
-            application/json:
-              schema:
-                type: object
-  /user/attendanceCheck:
-    put:
-      tags:
-        - user
-      summary: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인
-      description: 유저의 마지막 로그인 시간으로부터 24시간 경과 확인 -> 포인트 지급 여부 업데이트 API
-      security:
-        - Authorization: []
-      responses:
-        '200':
-          description: '출석체크 시간, 포인트 지급 여부 업데이트'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  attendance:
-                    type: string
-                    example: 2022-05-02T16:03:30.429Z
-                  isPointGiven:
-                    type: string
-                    example: false
-  /user/checkIn:
-    put:
-      tags:
-        - user
-      summary: 기존 포인트 + 1000
-      description: '기존 포인트 + 1000, 포인트 지급 여부 업데이트 API'
-      security:
-        - Authorization: []
-      responses:
-        '200':
-          description: '포인트, 포인트 지급 여부 업데이트'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  attendance:
-                    type: string
-                    example: 2022-05-02T16:03:30.429Z
-                  isPointGiven:
-                    type: string
-                    example: false
-                  point:
-                    type: number
-                    example: 2000
-  /user/profileModify:
-    put:
-      tags:
-        - user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nickname:
-                  type: string
-                  example: 태초마을 관장
-                likeType:
-                  type: string
-                  example: 불꽃
-                profileImg:
-                  type: string
-                  example: 117.png
-                interest:
-                  type: number
-                  example: 5
-      summary: 유저의 프로필 변경
-      description: 유저의 프로필 변경 API
-      security:
-        - Authorization: []
-      responses:
-        '200':
-          description: 유저 프로필 변경 성공
-  /user/changePassword:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-                  example: 1234
-      tags:
-        - user
-      summary: 비밀번호 변경
-      description: User의 비밀번호 변경 API
-      security:
-        - Authorization: []
-      responses:
-        '200':
-          description: 비밀번호 변경 성공
-        '400':
-          description: 변경할 패스워드 입력

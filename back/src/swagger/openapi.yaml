@@ -17,6 +17,20 @@ components:
   security:
     Authorization: []
 paths:
+  /user/register:
+    $ref: './userRouter.yaml#/~1user~1register'
+  /user/login:
+    $ref: './userRouter.yaml#/~1user~1login'
+  /user/current:
+    $ref: './userRouter.yaml#/~1user~1current'
+  /user/attendanceCheck:
+    $ref: './userRouter.yaml#/~1user~1attendanceCheck'
+  /user/checkIn:
+    $ref: './userRouter.yaml#/~1user~1checkIn'
+  /user/profileModify:
+    $ref: './userRouter.yaml#/~1user~1profileModify'
+  /user/changePassword:
+    $ref: './userRouter.yaml#/~1user~1changePassword'
   /achievementList:
     $ref: './achievementsRouter.yaml#/~1achievementList'
   /userAchievementList:
@@ -53,17 +67,3 @@ paths:
     $ref: './quizRouter.yaml#/~1succeedQuiz~1{opportunity}'
   /ranking/{field}/{count}:
     $ref: './rankRouter.yaml#/~1ranking~1{field}~1{count}'
-  /user/register:
-    $ref: './userRouter.yaml#/~1user~1register'
-  /user/login:
-    $ref: './userRouter.yaml#/~1user~1login'
-  /user/current:
-    $ref: './userRouter.yaml#/~1user~1current'
-  /user/attendanceCheck:
-    $ref: './userRouter.yaml#/~1user~1attendanceCheck'
-  /user/checkIn:
-    $ref: './userRouter.yaml#/~1user~1checkIn'
-  /user/profileModify:
-    $ref: './userRouter.yaml#/~1user~1profileModify'
-  /user/changePassword:
-    $ref: './userRouter.yaml#/~1user~1changePassword'
