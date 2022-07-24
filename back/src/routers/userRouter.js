@@ -2,10 +2,11 @@ import is from '@sindresorhus/is';
 import { Router } from 'express';
 import { loginRequired } from '../middlewares/loginRequired';
 import { userAuthService } from '../services/userService';
+import { validator } from '../middlewares/validator'
 
 const userAuthRouter = Router();
 
-userAuthRouter.post('/user/register', async function (req, res, next) {
+userAuthRouter.post('/user/register',validator('registerScema'), async function (req, res, next) {
   try {
     if (is.emptyObject(req.body)) {
       throw new Error(
@@ -36,7 +37,7 @@ userAuthRouter.post('/user/register', async function (req, res, next) {
   }
 });
 
-userAuthRouter.post('/user/login', async function (req, res, next) {
+userAuthRouter.post('/user/login', validator('loginScema'), async function (req, res, next) {
   try {
     const email = req.body.email;
     const password = req.body.password;
@@ -76,6 +77,7 @@ userAuthRouter.get(
 
 userAuthRouter.put(
   '/user/attendanceCheck',
+  validator('userIdScema'),
   loginRequired,
   async function (req, res, next) {
     try {
@@ -103,6 +105,7 @@ userAuthRouter.put(
 
 userAuthRouter.put(
   '/user/checkIn',
+  validator('userIdScema'),
   loginRequired,
   async function (req, res, next) {
     try {
@@ -126,9 +129,11 @@ userAuthRouter.put(
 
 userAuthRouter.put(
   '/user/profileModify',
+  validator('profileModifyScema'),
   loginRequired,
   async function (req, res, next) {
     try {
+      console.log(req.body)
       const userId = req.currentUserId;
       let currentUserInfo = await userAuthService.getUserInfo({ userId });
       const nickname = req.body.nickname ?? null;
@@ -154,6 +159,7 @@ userAuthRouter.put(
 
 userAuthRouter.post(
   '/user/changePassword',
+  validator('changePasswordScema'),
   loginRequired,
   async function (req, res, next) {
     try {
