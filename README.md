@@ -23,7 +23,11 @@
 ## 4. 프로젝트 구성도
   - [피그마](https://www.figma.com/file/KxuyTZvDXDt8biG9m71Fg4/Untitled?node-id=0%3A1)
 
-## 5. 프로젝트 팀원 역할 분담
+## 5. 시연 영상
+
+<a href="https://youtu.be/Ww5VMokgkdU" target="_blank" rel="noreferrer noopener"><img src="https://user-images.githubusercontent.com/71453094/184405092-b946f8d0-0312-4721-a267-801f0e305271.png"/></a>
+
+## 6. 프로젝트 팀원 역할 분담
 |  이름  |    역할    |
 | ------ | ---------- |
 | 김은혜 | 팀장, 백엔드 |
@@ -52,5 +56,5 @@
 - 개발 단계: 웹 서버 사용자가 직접 백엔드에 저장할수 있는 기능 구현, 데이터 베이스 구축 및 API 활용, 데이터 분석 개념 총동원하기
 - 수정 단계: 코치님 피드백 반영해서 분석/ 시각화 방식 수정
 
-## 6. 버전
+## 7. 버전
   - 1.0
